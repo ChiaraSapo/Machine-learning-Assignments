@@ -1,1 +1,1 @@
-Machine_Learning_Assignments
+Assignments from the Machine Learning course 
