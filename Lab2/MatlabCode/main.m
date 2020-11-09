@@ -83,11 +83,29 @@ ylabel('mpg (target)');
 %% four columns (predict mpg with the other three columns)
 % x: all variables
 % t: mpg
-X_Car=CarsDataset{:,3:5};
+X_Car=CarsDataset{:,3:5};     
 t_Car=CarsDataset{:,2};
+
+% Normalize
+X_Car_norm=zeros(size(X_Car));
+for i=1:size(X_Car,2) %col
+    for j=1:size(X_Car,1) %rows
+        X_Car_norm(j,i)=(X_Car(j,i)-mean(X_Car(:,i)))/std(X_Car(:,i));
+    end
+end
+
+t_Car_norm=zeros(size(t_Car));
+for j=1:size(t_Car,1)
+    t_Car_norm(j)=(t_Car(j)-mean(t_Car(:)))/std(t_Car(:));
+end
+
 % Call multi-D linear regression function
-W=multiDimLinReg(X_Car,t_Car);
-y4=X_Car*W;
+W=multiDimLinReg(X_Car_norm,t_Car_norm);
+y4_norm=X_Car_norm*W;
+y4=zeros(size(y4_norm));
+for j=1:size(y4_norm,1)
+    y4(j)=(y4_norm(j)*std(t_Car(:)))+mean(t_Car(:));
+end
 
 MultidimResults = table(t_Car, y4);
 MultidimResults.Properties.VariableNames = {'Real Target t' 'Predicted Target y'};
@@ -138,9 +156,21 @@ for i=1:LOOPS
     
     %% 4
     x_3=CarTrainingSet(:,2:4);
-    t_3=CarTrainingSet(:,1);
+    x_3_norm=zeros(size(x_3));
+    for k=1:size(x_3,2) %col
+        for j=1:size(x_3,1) %rows
+            x_3_norm(j,k)=(x_3(j,k)-mean(x_3(:,k)))/std(x_3(:,k));
+        end
+    end
+    
+    t_3=CarTrainingSet(:,1); 
+    t_3_norm=zeros(size(t_3));
+    for j=1:size(t_3,1)
+        t_3_norm(j)=(t_3(j)-mean(t_3(:)))/std(t_3(:));
+    end
+
     w1_3=multiDimLinReg(x_3,t_3);
-    obj.training(i,3) = meanSquareError(x_3,t_3,w1_3,0,2);
+    obj.training(i,3) = meanSquareError(x_3_norm,t_3_norm,w1_3,0,2);
     
     %% Test results and compute J from training sets
     %% 1
@@ -155,8 +185,19 @@ for i=1:LOOPS
     
     %% 4
     x=CarTestSet(:,2:4);
-    t=CarTestSet(:,1);
-    obj.test(i,3) = meanSquareError(x,t,w1_3,0,2);
+    x_norm=zeros(size(x));
+    for k=1:size(x,2) %col
+        for j=1:size(x,1) %rows
+            x_norm(j,k)=(x(j,k)-mean(x(:,k)))/std(x(:,k));
+        end
+    end
+    
+    t=CarTestSet(:,1); 
+    t_norm=zeros(size(t));
+    for j=1:size(t,1)
+        t_norm(j)=(t(j)-mean(t(:)))/std(t(:));
+    end
+    obj.test(i,3) = meanSquareError(x_norm,t_norm,w1_3,0,2);
     
 end 
 
