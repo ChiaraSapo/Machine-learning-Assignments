@@ -1,4 +1,5 @@
-# Machine Learning Assignments 
+Assignments for the machine learning course.
+
 All of the assignments are implemented in MATLAB.
 # Ass1
 Naive Bayes Classifier.
