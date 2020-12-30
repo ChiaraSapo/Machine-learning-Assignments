@@ -16,5 +16,5 @@ Neural networks building though matlab nn GUI.
 ## 5a
 Autoencoder.
 ## 5b
-Deep neural networks.
+Use of pretrained convolutional neural networks.
 
